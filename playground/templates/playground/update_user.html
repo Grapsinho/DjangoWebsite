@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <script
+      src="https://kit.fontawesome.com/732f42d40b.js"
+      crossorigin="anonymous"
+    ></script>
+
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'styles/room1.css' %}"
+      media="screen"
+    />
+  </head>
+  <body>
+    {% include 'navbar.html' %}
+
+    <main class="update-user-main">
+      <div class="container-room-create">
+        <div class="inside-cont">
+          <h4 class="title">
+            <a
+              href="{{request.META.HTTP_REFERER}}"
+              class="title_cancle"
+              style="color: #71c6dd"
+              ><i class="fa-solid fa-arrow-left"></i
+            ></a>
+            EDIT YOUR PROFILE
+          </h4>
+          <!--ანუ ვეუბნებით ფორმს რომ ამ ფორმით ვტვირთავთ სხვადასხვა სახის ფაილებსაც და არამახოლოდ ტექსტს-->
+          <form
+            action=""
+            method="POST"
+            class="room_create-form"
+            enctype="multipart/form-data"
+          >
+            {% csrf_token %}
+
+            <div class="name">
+              <label for="profile_pic">Avatar</label>
+              <div style="flex-direction: column; display: flex">
+                {{form.avatar}}
+              </div>
+            </div>
+
+            <div class="name" style="width: 100%">
+              <label>Name</label>
+              {{form.name}}
+            </div>
+
+            <div class="wrap" style="gap: 2rem; display: flex">
+              <div class="name" style="width: 100%">
+                <label>Username</label>
+                {{form.username}}
+              </div>
+
+              <div class="name avatar" style="width: 100%">
+                <label>Email</label>
+                {{form.email}}
+              </div>
+            </div>
+
+            <div class="desc">
+              <label>Bio</label>
+              {{form.bio}}
+            </div>
+
+            <div class="btns">
+              <a
+                href="{% url 'userProfile' request.user.id %}"
+                class="submit_btn cancel_btn"
+                >Close</a
+              >
+              <input type="submit" value="Update" class="submit_btn" />
+            </div>
+          </form>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      const brEl = document.querySelector("br");
+
+      brEl.remove();
+    </script>
+  </body>
+</html>

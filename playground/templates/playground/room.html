@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Website</title>
+
+    <script
+      defer
+      src="https://kit.fontawesome.com/732f42d40b.js"
+      crossorigin="anonymous"
+    ></script>
+
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'styles/home.css' %}"
+      media="screen"
+    />
+
+    <style>
+      .rame:empty {
+        background-color: red !important;
+      }
+    </style>
+  </head>
+  <body>
+    {% include "navbar.html" %}
+
+    <main>
+      <div class="container container-room">
+        <div class="wrapper-mes">
+          <div class="header">
+            <h3 style="font-size: 1rem">
+              <a
+                href="{% url 'home' %}"
+                class="title_cancle"
+                style="margin-right: 0.5rem; color: #71c6dd"
+                ><i class="fa-solid fa-arrow-left"></i
+              ></a>
+              {{room.name}}
+            </h3>
+
+            <div>
+              {% if request.user != room.host %}
+
+              <a href="{% url 'updateRoom' room.id %}"></a>
+              <a href="{% url 'deleteRoom' room.id %}"></a>
+
+              {% else %}
+              <a href="{% url 'updateRoom' room.id %}">Edit</a>
+              <a href="{% url 'deleteRoom' room.id %}">Delete</a>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="conversation-div">
+            <div>
+              <div class="flex-h4">
+                <h4 style="font-weight: 500; font-size: 1.3rem; color: #71c6dd">
+                  {{room.name}}
+                </h4>
+
+                {% if request.user.username != room.host.username %}
+                <form action="" method="POST" class="comment_form">
+                  {% csrf_token %}
+                  <div class="form-group1">
+                    <input
+                      type="submit"
+                      value="JOIN"
+                      name="user"
+                      class="btn--pill btn--pill1"
+                    />
+                    <input
+                      type="submit"
+                      value="LEAVE"
+                      style="display: none"
+                      class="btn--pill btn--pill2"
+                    />
+                  </div>
+                </form>
+                {% endif %}
+              </div>
+
+              <p style="color: #b2bdbd">{{room.created|timesince}}</p>
+
+              <p
+                style="
+                  margin-block: 0.5rem;
+                  font-size: 0.7rem;
+                  font-weight: 500;
+                  color: #8b8b8b;
+                "
+              >
+                HOSTED BY
+              </p>
+
+              <a
+                style="gap: 0.4rem; display: flex"
+                href="{% url 'userProfile' room.host.id %}"
+              >
+                <img src="{{room.host.avatar.url}}" alt="" />
+                <span style="color: #71c6dd">@{{room.host.username}}</span>
+              </a>
+
+              <h4
+                style="font-weight: 400; margin-block: 0.5rem; color: #e3a442"
+              >
+                NOTE: Room will only display 25 most recent messages while this
+                website is still in beta.
+              </h4>
+            </div>
+
+            <div class="messages-div">
+              <div
+                class="inside-mes-div every-body"
+                style="display: flex; flex-direction: column; gap: 1rem"
+              >
+                {% for message in room_massages %} {% if message.body %}
+                <div class="rame">
+                  <small style="margin-bottom: 1rem">
+                    <a
+                      href="{% url 'userProfile' message.user.id %}"
+                      style="gap: 1rem; display: flex"
+                    >
+                      <img src="{{message.user.avatar.url}}" alt="" />
+                      <span style="color: #71c6dd">@{{message.user.name}}</span>
+                      <span style="color: #b2bdbd">
+                        {{message.created|timesince}} ago
+                      </span>
+                    </a>
+
+                    <p
+                      class="message_body"
+                      style="margin-top: 0.3rem; color: #b2bdbd"
+                    >
+                      {{message.body}}
+                    </p>
+                  </small>
+                </div>
+                {% endif %} {% endfor %}
+              </div>
+            </div>
+
+            {% if request.user.is_authenticated %}
+            <div class="comment_form-div">
+              <form action="" method="POST" class="comment_form">
+                {% csrf_token %}
+                <div class="form-group">
+                  <input
+                    type="text"
+                    name="body"
+                    placeholder="Type your comment here..."
+                    class="write"
+                  />
+                  <button type="submit" class="send_btn">
+                    <i class="fa-solid fa-paper-plane"></i>
+                  </button>
+                </div>
+              </form>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="participants-div">
+          <div class="header">
+            <h3>
+              Participants <span>({{participants.all.count}} Joined)</span>
+            </h3>
+          </div>
+
+          <div class="part-wrapper">
+            <div class="wrap">
+              {% for user in participants %}
+
+              <div class="participants-users">
+                <div class="users-div">
+                  <a href="{% url 'userProfile' user.id %}">
+                    <img src="{{user.avatar.url}}" alt="" />
+                  </a>
+                  <a href="{% url 'userProfile' user.id %}">
+                    <span style="color: #b2bdbd">{{user.name}}</span>
+                    <span style="color: #71c6dd">@{{user.username}}</span>
+                  </a>
+                </div>
+              </div>
+
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- key იქნება room-id და value იქნება room_id-->
+    {{room_id|json_script:'room-id'}}
+    {{request.user.name|json_script:'message-user'}}
+    {{request.user.avatar.url|json_script:'avatar-url'}}
+    {{message1.created|timesince|json_script:'message-created'}}
+    <script>
+      const roomId = JSON.parse(document.getElementById("room-id").textContent);
+      const btnPill = document.querySelector(".btn--pill1");
+      const btnPill1 = document.querySelector(".btn--pill2");
+      const send_btn = document.querySelector(".send_btn");
+      const everyBody = document.querySelector(".every-body");
+      const home = document.querySelector(".home-div");
+      const messageUser = JSON.parse(
+        document.getElementById("message-user").textContent
+      );
+      const avatarUrl = JSON.parse(
+        document.getElementById("avatar-url").textContent
+      );
+      const messageCreated = JSON.parse(
+        document.getElementById("message-created").textContent
+      );
+
+      // გავგზავნეთ მესიჯი ბექენდს
+      send_btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        const write = document.querySelector(".write");
+        const message1 = write.value;
+
+        chatSocket.send(
+          JSON.stringify({
+            "message": message1,
+            "messageUser": messageUser,
+            "avatarUrl": avatarUrl,
+            "messageCreated": messageCreated,
+            "roomId": roomId,
+          })
+        );
+
+        write.value = "";
+      });
+
+      btnPill.addEventListener("click", (e) => {
+        btnPill1.classList.add("active");
+        btnPill.classList.add("dective");
+      });
+
+      btnPill1.addEventListener("click", (e) => {
+        btnPill1.classList.remove("active");
+        btnPill.classList.remove("dective");
+      });
+
+      const chatSocket = new WebSocket(
+        "ws://" + window.location.host + "/ws/room_page/" + roomId + "/"
+      );
+
+      chatSocket.onmessage = function (e) {
+        const data = JSON.parse(e.data);
+        console.log(data);
+
+        if (data.message == "") {
+          return;
+        } else {
+          everyBody.innerHTML += `
+
+            <small style="margin-bottom: 1rem"> 
+                <a
+                href="{% url 'userProfile' request.user.id%}"
+                style="gap: 1rem; display: flex"
+              >
+                  <img src="${data.avatarUrl}" class="avatar" alt="" />
+                  <span class="message-user" style="color: #71c6dd">@${data.messageUser}</span>
+                  <span class="message-created" style="color: #b2bdbd">0 minutes ago</span>
+                </a>
+
+                <p class="message_body" style="margin-top: 0.3rem; color: #b2bdbd">${data.message}</p>
+                </small>
+            `;
+        }
+      };
+
+      chatSocket.onclose = function (e) {
+        console.log("onclose");
+      };
+    </script>
+  </body>
+</html>

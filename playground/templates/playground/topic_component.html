@@ -1,0 +1,20 @@
+<p>BROWSE TOPICS</p>
+
+<div class="flex">
+  <a href="{% url 'home' %}" class="all_topic"
+    >All <span>{{topics.count}}</span></a
+  >
+
+  {% for topic in topics %}
+
+  <!--მოკლედ გვერძე რაც მივაწერე ეგ შეგვიძლია გმაოვიყენოთ რაღაცეებისთვის მაგალითად რამეს რო დავაწერთ
+        მაღლა დაეწერა ლინკის გვერდით აი ასე http://127.0.0.1:8000/?=Python-->
+  {% if topic.room_set.all.count >= 1 %}
+  <div class="flex_topics">
+    <a href="{% url 'home' %}?q={{topic.name}}" class="all_topic"
+      >{{topic.name}} ({{topic.room_set.all.count}})
+    </a>
+    <span class="follow_btn">Follow</span>
+  </div>
+  {% endif %} {% endfor %}
+</div>

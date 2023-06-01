@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Website</title>
+
+    <script
+      defer
+      src="https://kit.fontawesome.com/732f42d40b.js"
+      crossorigin="anonymous"
+    ></script>
+
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'styles/home.css' %}"
+      media="screen"
+    />
+  </head>
+  <body>
+    {% include "navbar.html" %}
+
+    <main>
+      <div class="container">
+        <input type="checkbox" id="checkbox" />
+        <label for="checkbox" class="toggle">
+          <div class="bars" id="bar1"></div>
+          <div class="bars" id="bar2"></div>
+          <div class="bars" id="bar3"></div>
+        </label>
+
+        <div class="topics">
+          {% include 'playground/topic_component.html' %}
+        </div>
+
+        <div class="rooms">
+          <div class="flex">
+            <div>
+              <h3>ROOMS</h3>
+              <p>{{room_count}} Rooms available</p>
+            </div>
+
+            <a href="{% url 'roomCreate' %}" class="create_btn"
+              ><span><i class="fa-thin fa-plus"></i></span> Create Room</a
+            >
+          </div>
+
+          {% include 'playground/room_component.html' %}
+        </div>
+
+        <div class="activity">
+          {% include 'playground/activity_component.html' %}
+        </div>
+      </div>
+    </main>
+
+    <script src="{% static 'js/index.js' %}"></script>
+  </body>
+</html>

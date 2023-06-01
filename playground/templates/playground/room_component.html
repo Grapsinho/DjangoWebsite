@@ -1,0 +1,62 @@
+{% load static %}
+<div>
+  <p style="font-weight: 400; color: #71c6dd" class="all_rooms">All Rooms</p>
+  {% for room in rooms %}
+
+  <div class="room_wrapper">
+    <div class="first col">
+      <h4>
+        <a
+          href="{% url 'userProfile' room.host.id %}"
+          style="font-weight: 500"
+          class="host_name"
+        >
+          <div class="img_div">
+            <img src="{{room.host.avatar.url}}" alt="" />
+          </div>
+
+          Host @{{room.host.username}}
+        </a>
+      </h4>
+
+      <p class="created" style="font-size: 0.9rem; color: #b2bdbd">
+        {{room.created|timesince}}
+      </p>
+    </div>
+    <div class="second">
+      <p>
+        <a href="{% url 'room' room.id %}" class="room_name">{{room.name}}</a>
+      </p>
+
+      <div class="joined_people">
+        <img src="{% static 'images/avatar.svg' %}" alt="" />
+        <img src="{% static 'images/avatar.svg' %}" alt="" />
+        <img src="{% static 'images/avatar.svg' %}" alt="" />
+      </div>
+    </div>
+
+    <div class="third col">
+      <p class="room_joined" style="font-size: 0.9rem">
+        <i class="fa-solid fa-users" style="color: #71c6dd"></i>
+        <span style="color: #b2bdbd"
+          ><span class="all_participants">{{room.participants.all.count}}</span>
+          Joined</span
+        >
+      </p>
+
+      <p
+        style="
+          color: #b2bdbd;
+          font-size: 0.9rem;
+          padding: 0.3rem 0.5rem;
+          border-radius: 15px;
+          background-color: #51546e;
+        "
+      >
+        {{room.topic}}
+      </p>
+    </div>
+  </div>
+
+  {% endfor %}
+</div>

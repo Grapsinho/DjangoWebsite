@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script
+      src="https://kit.fontawesome.com/732f42d40b.js"
+      crossorigin="anonymous"
+    ></script>
+
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'styles/home.css' %}"
+      media="screen"
+    />
+
+    <style>
+      .navbar label {
+        margin-top: 0 !important;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="navbar">
+      <div class="container-navbar">
+        <div class="logo-search-wrap">
+          <div class="logo-div">
+            <a href="/"
+              ><img src="/static/images/logo.svg" alt="" class="logo-photo"
+            /></a>
+            <a href="/" class="logo">StudyBud</a>
+          </div>
+
+          <div class="form-div">
+            <!--მინდა რომ იუზერი გაგზავნოს ჰოუმ ფეიჯზე როცა რამეს ჩაწერს-->
+            <form action="{% url 'home' %}" method="get">
+              <label>
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input
+                  class="search-inp"
+                  type="text"
+                  name="q"
+                  value="{{q}}"
+                  placeholder="Search for rooms"
+                />
+              </label>
+            </form>
+          </div>
+        </div>
+
+        <div class="user-div">
+          <div class="user-photo">
+            {% if request.user.is_authenticated %}
+            <a href="{% url 'userProfile' request.user.id %}">
+              <img src="{{request.user.avatar.url}}" alt="" />
+            </a>
+            {% else %}
+            <i class="fa-solid fa-user user-photo-icon"></i>
+            {% endif %}
+          </div>
+
+          <div class="user-name">
+            {% if request.user.is_authenticated %}
+            <a href="{% url 'userProfile' request.user.id %}">
+              <h4>
+                {{request.user.name}}
+                <span class="username">@{{request.user.username}}</span>
+              </h4>
+            </a>
+            {% endif %}
+          </div>
+          <a href="{% url 'login' %}" class="login">Login</a>
+          {% if request.user.is_authenticated %}
+          <div class="dropdown">
+            <i
+              class="fa-solid fa-angle-down dropdown-icon dropbtn"
+              onclick="myFunction()"
+            ></i>
+            <div id="myDropdown" class="dropdown-content">
+              <a href="{% url 'updateUser' %}" style="border-bottom: 1px solid"
+                ><i class="fa-solid fa-gear navbar-icons"></i>
+                <span>Settings</span></a
+              >
+
+              <a href="{% url 'logout' %}"
+                ><i
+                  class="fa-sharp fa-solid fa-arrow-right-from-bracket navbar-icons"
+                ></i>
+                <span>Logout</span></a
+              >
+            </div>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <script>
+      /* When the user clicks on the button, 
+      toggle between hiding and showing the dropdown content */
+      function myFunction() {
+        document.getElementById("myDropdown").classList.toggle("show");
+      }
+
+      // Close the dropdown if the user clicks outside of it
+      window.onclick = function (event) {
+        if (!event.target.matches(".dropbtn")) {
+          var dropdowns = document.getElementsByClassName("dropdown-content");
+          var i;
+          for (i = 0; i < dropdowns.length; i++) {
+            var openDropdown = dropdowns[i];
+            if (openDropdown.classList.contains("show")) {
+              openDropdown.classList.remove("show");
+            }
+          }
+        }
+      };
+
+      const userName = document.querySelector(".username");
+      const dropBtn = document.querySelector(".dropbtn");
+      const login = document.querySelector(".login");
+
+      if (userName == null) {
+        dropBtn.classList.add("delete");
+        login.classList.remove("delete");
+      } else {
+        dropBtn.classList.remove("delete");
+        login.classList.add("delete");
+      }
+    </script>
+  </body>
+</html>

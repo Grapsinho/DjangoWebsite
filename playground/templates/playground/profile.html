@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <script
+      defer
+      src="https://kit.fontawesome.com/732f42d40b.js"
+      crossorigin="anonymous"
+    ></script>
+
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'styles/home.css' %}"
+      media="screen"
+    />
+
+    <style>
+      .all_rooms {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    {% include 'navbar.html' %}
+
+    <main>
+      <div class="container">
+        <input type="checkbox" id="checkbox" />
+        <label for="checkbox" class="toggle">
+          <div class="bars" id="bar1"></div>
+          <div class="bars" id="bar2"></div>
+          <div class="bars" id="bar3"></div>
+        </label>
+
+        <div class="topics">
+          {% include 'playground/topic_component.html' %}
+        </div>
+
+        <div class="rooms">
+          <div class="flex1">
+            <div class="userInfo">
+              <img src="{{user.avatar.url}}" alt="" class="user-photo1" />
+
+              <h4 class="user-name">{{user.name}}</h4>
+              <p style="margin-bottom: 1rem; color: #71c6dd">
+                @{{user.username}}
+                <span style="color: #b2bdbd">
+                  <span class="counter">0</span> Followers</span
+                >
+              </p>
+
+              {% if request.user == user %}
+              <a href="{% url 'updateUser' %}" class="btn--pill"
+                >Edit Profile</a
+              >
+              {% else %}
+              <button
+                style="cursor: pointer"
+                class="btn--pill follow_btn follow_btn1"
+              >
+                Follow
+              </button>
+              {% endif %}
+            </div>
+
+            <div style="margin-bottom: 2rem">
+              <p style="margin-top: 1rem">ABOUT</p>
+
+              <p style="color: #b2bdbd">{{user.bio}}</p>
+            </div>
+          </div>
+
+          {% if request.user == user %}
+          <p style="margin-bottom: 1rem">STUDY ROOMS LEARN PARTICIPATES IN</p>
+          {% else %}
+          <p style="margin-bottom: 1rem">
+            STUDY ROOMS {{user.username}} PARTICIPATES IN
+          </p>
+          {% endif %} {% include 'playground/room_component.html' %}
+        </div>
+
+        <div class="activity">
+          {% include 'playground/activity_component.html' %}
+        </div>
+      </div>
+    </main>
+
+    <script src="{% static 'js/index.js' %}"></script>
+
+    <script>
+      let myLeads = [];
+      let find = [];
+
+      // Check local storage for saved values and update variables
+      const leadsFromLocalStorage = JSON.parse(localStorage.getItem("find"));
+      if (leadsFromLocalStorage) {
+        find = leadsFromLocalStorage;
+        count = find[find.length - 1]; // Set the count to the last saved value
+        myLeads = Array(count)
+          .fill()
+          .map((_, i) => i + 1); // Populate myLeads with saved counts
+        counter.textContent = count;
+      }
+
+      follow_btn1.addEventListener("click", () => {
+        if (follow_btn1.textContent == "Following") {
+          count++;
+          myLeads.push(count);
+          find.push(myLeads.slice(-1)[0]);
+          localStorage.setItem("find", JSON.stringify(find));
+        } else {
+          count--;
+          myLeads.push(count);
+          find.push(myLeads.slice(-1)[0]);
+          localStorage.setItem("find", JSON.stringify(find));
+        }
+        counter.textContent = count;
+      });
+
+      const uniqueName = document.querySelector(".unique-name");
+      const created = document.querySelector(".created");
+    </script>
+  </body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <script
+      src="https://kit.fontawesome.com/732f42d40b.js"
+      crossorigin="anonymous"
+    ></script>
+
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'styles/room1.css' %}"
+      media="screen"
+    />
+  </head>
+  <body>
+    {% include 'navbar.html' %}
+
+    <main class="create-room-main">
+      <div class="container-room-create">
+        <div class="inside-cont">
+          <h4 class="title">
+            <a
+              href="{% url 'home' %}"
+              class="title_cancle"
+              style="color: #71c6dd"
+              ><i class="fa-solid fa-arrow-left"></i
+            ></a>
+            CREATE/UPDATE STUDY ROOM
+          </h4>
+          <form action="" method="POST" class="room_create-form">
+            {% csrf_token %}
+
+            <div class="topic">
+              <label for="room_topic">Enter a Topic</label>
+              <input
+                required
+                list="topics"
+                value="{{room.topic.name}}"
+                name="topic"
+                id="topic"
+              />
+              <datalist id="topics">
+                {% for topic in all_topics %}
+                <option value="{{topic.name}}">{{topic.name}}</option>
+                {% endfor %}
+              </datalist>
+            </div>
+
+            <div class="name">
+              <label for="room_name">Room Name</label>
+              {{fields.name}}
+            </div>
+
+            <div class="desc">
+              <label for="room_description">Room Description</label>
+              {{fields.description}}
+            </div>
+
+            <div class="btns">
+              <a href="{% url 'home' %}" class="submit_btn cancel_btn">Close</a>
+              <input type="submit" value="Submit" class="submit_btn" />
+            </div>
+          </form>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

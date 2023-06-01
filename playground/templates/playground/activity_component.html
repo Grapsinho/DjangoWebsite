@@ -1,0 +1,44 @@
+{% load static %}
+<h3>Recent Activity</h3>
+
+{% for message in room_massages %}
+<div>
+  {% if message.body is not Null %}
+  <div class="cont" style="padding: 1rem">
+    <div class="activity_div">
+      <div class="delete_div">
+        {% if request.user == message.user %}
+
+        <a href="{% url 'deleteMessages' message.id %}" class="delete"
+          ><i class="fa-solid fa-x"></i
+        ></a>
+        {% endif %}
+      </div>
+
+      <small>
+        <a href="{% url 'userProfile' message.user.id %}"
+          ><img src="{% static 'images/avatar.svg' %}" alt=""
+        /></a>
+        <span style="color: #8b8b8b; display: flex; flex-direction: column"
+          ><a
+            href="{% url 'userProfile' message.user.id %}"
+            style="font-size: 0.9rem; color: #71c6dd"
+            >@{{message.user.username}}</a
+          >
+          {{message.created|timesince}}
+
+          <p style="font-size: 0.9rem">
+            replied to post "<a
+              href="{% url 'room' message.room.id %}"
+              class="message_room_name"
+              >{{message.room}}</a
+            >"
+          </p>
+        </span>
+      </small>
+      <h4 class="messages">{{message}}</h4>
+    </div>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>

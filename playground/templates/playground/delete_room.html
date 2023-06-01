@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <script
+      src="https://kit.fontawesome.com/732f42d40b.js"
+      crossorigin="anonymous"
+    ></script>
+
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'styles/delete.css' %}"
+      media="screen"
+    />
+  </head>
+  <body>
+    {% include 'navbar.html' %}
+    <main class="main-cont">
+      <div class="cont">
+        <div class="inside-cont">
+          <h4 class="title">
+            <a
+              href="{{request.META.HTTP_REFERER}}"
+              class="title_cancle"
+              style="color: #71c6dd"
+              ><i class="fa-solid fa-arrow-left"></i
+            ></a>
+            BACK
+          </h4>
+          <form action="" method="POST" class="room_create-form">
+            {% csrf_token %}
+
+            <p style="color: #b2bdbd">
+              are you sure you want to delete this
+              <span style="font-weight: bold; color: #71c6dd">{{obj}}</span>
+              room?
+            </p>
+
+            <div class="btns">
+              <a
+                href="{{request.META.HTTP_REFERER}}"
+                class="submit_btn cancel_btn"
+                >Close</a
+              >
+              <input type="submit" value="Submit" class="submit_btn" />
+            </div>
+          </form>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>
